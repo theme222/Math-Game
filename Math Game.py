@@ -33,7 +33,7 @@ volume_music = 0.7
 volume_sound = 0.7
 
 # Game Setup
-FPS = 120
+FPS = 240
 fpsClock = pygame.time.Clock()
 screen = pygame.display.set_mode((0, 0), pygame.RESIZABLE)
 WIDTH = screen.get_width()
@@ -179,12 +179,13 @@ def main():
                     time_left = 20
                     # Make a new question
                     for i in (list(options_choices.values())):
-                        if i[1]:
-                            temp_var_loop = True
-                            scene = 2
-                            break
-                        else:
-                            temp_var_loop = False
+                        if i[0].id < 11:
+                            if i[1]:
+                                temp_var_loop = True
+                                scene = 2
+                                break
+                            else:
+                                temp_var_loop = False
 
                     while temp_var_loop:
                         temp_var_choice = random.choice(list(options_choices.keys()))  # get a random key
@@ -207,7 +208,7 @@ def main():
                 if on_text[0] and on_text[1] == 4:  # NEXT TEXT
                     scene = -1
 
-                if on_text[0] and 4 < on_text[1] and on_text[1]<13:  # OPTIONS TEXT
+                if on_text[0] and 4 < on_text[1] < 13:  # OPTIONS TEXT
                     temp_list_idkwtf = list(options_choices.values())  # ima be honest i have no idea how this works
                     temp_list_idkwtf[on_text[1] - 5][1] = not temp_list_idkwtf[on_text[1] - 5][1]  # same with the first
 
@@ -237,9 +238,11 @@ def main():
                         pygame.mixer.Channel(1).play(pygame.mixer.Sound('Resources/Sounds/Buzzer.mp3'))
 
                     # Make a new question
-                    while True:
+                    while temp_var_loop:
                         temp_var_choice = random.choice(list(options_choices.keys()))  # get a random key
-                        if options_choices[temp_var_choice][1]:  # check if the key is enabled
+                        if options_choices[temp_var_choice][1] and \
+                                'MUSIC' not in temp_var_choice and \
+                                'SOUND' not in temp_var_choice:  # check if the key is enabled and isn't a sound
                             make_question(temp_var_choice)
                             break
 
@@ -452,7 +455,7 @@ def make_question(mode):  # A function to make options randomly
             answer = num1 / num2
             if len(list(str(answer).split('.'))[1]) <= 1 and answer != 1.0 and answer != num1:  # uhhhhhhhhhhhhhhhhhhhhh
                 break
-            symbol = ''
+            symbol = '÷'
     elif '>' in mode:
         num1 = random.randint(1, 20000)
         num2 = random.randint(1, 20000)
@@ -476,8 +479,8 @@ def make_question(mode):  # A function to make options randomly
             symbol = 'x'
         else:
             answer = num1 / num2
-            symbol = ''
-
+            symbol = '÷'
+    print(num1, num2)
     options = []
     for i in range(3):
         if type(answer) == float:
