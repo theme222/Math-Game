@@ -165,6 +165,8 @@ def main():
             if event.type == QUIT:
                 oof()
             if event.type == pygame.MOUSEBUTTONDOWN:  # If mouse clicks
+                if on_text[0] and on_text[1] == 21:
+                    webbrowser.open_new_tab('https://github.com/theme222/Math-Game/tree/main')
                 if on_text[0] and on_text[1] == 1:  # QUIT TEXT
                     oof()
 
@@ -205,7 +207,7 @@ def main():
                 if on_text[0] and on_text[1] == 4:  # NEXT TEXT
                     scene = -1
 
-                if on_text[0] and 4 < on_text[1]:  # OPTIONS TEXT
+                if on_text[0] and 4 < on_text[1] and on_text[1]<13:  # OPTIONS TEXT
                     temp_list_idkwtf = list(options_choices.values())  # ima be honest i have no idea how this works
                     temp_list_idkwtf[on_text[1] - 5][1] = not temp_list_idkwtf[on_text[1] - 5][1]  # same with the first
 
@@ -256,13 +258,32 @@ def main():
             # INITIALIZE
             back_text = Text()
             credits_text = Text()
+            zapsplat_text = Text()
+            me_text = Text()  # :D
+            open_source_text = Text()
 
             # DRAW
+
+            open_source_text.draw_text('Github : https://github.com/theme222/Math-Game/tree/main',
+                                       (WIDTH / 2), (HEIGHT * 4 / 6), 65, font, (174, 198, 255), 21)
+
+            zapsplat_text.draw_text('Sound effects from Zapsplat.com',
+                                    (WIDTH / 2), (HEIGHT * 3 / 6), 70, font, (255, 255, 255))
+
+            me_text.draw_text('Made by Sira Tongsima',
+                              (WIDTH / 2), (HEIGHT * 2 / 6), 70, font, (255, 255, 255))
+
             credits_text.draw_text('CREDITS', (WIDTH / 2), (HEIGHT / 6), 120, font, (255, 255, 255))
             back_text.draw_text('< BACK', WIDTH / 8, HEIGHT - HEIGHT / 12, 60, font, (255, 255, 255), 3)
 
             # POSITION
-            on_text = back_text.mouse_on_text(mouse_pos)
+            on_texts = [back_text.mouse_on_text(mouse_pos), open_source_text.mouse_on_text(mouse_pos)]
+            for i in on_texts:
+                if i[0]:
+                    on_text = i
+                    break
+                else:
+                    on_text = [False, 0]
 
         elif scene == 0:  # SCENE 0 MAIN MENU
 
