@@ -226,15 +226,15 @@ def main():
                 if on_button[1] > 0 and on_button[0]:  # THE 4 MAIN BUTTONS
                     question += 1
                     if options[on_button[1] - 1] == answer:  # IF CORRECT ANSWER
-                        time_left += 7
+                        time_left += 6
                         if symbol == '>':
-                            time_left -= 5
+                            time_left -= 4.5
                         pygame.mixer.Channel(1).play(pygame.mixer.Sound('Resources/Sounds/correct.mp3'))
                         if time_left > 40:  # capping the maximum stored time to 40
                             time_left = 40
                         score += 1
                     else:
-                        time_left -= 5
+                        time_left -= 6
                         pygame.mixer.Channel(1).play(pygame.mixer.Sound('Resources/Sounds/Buzzer.mp3'))
 
                     # Make a new question
