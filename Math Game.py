@@ -17,7 +17,7 @@ pygame.mixer.music.set_volume(0.7)  # Set volume
 # Variables
 num1 = 0  # the numbers getting rendered
 num2 = 0  # for example num1 + num2 ( 1 + 1 )
-difficulty = 'easy'  # easy normal or hard
+difficulty = 0  # easy normal or hard
 symbol = ''
 answer = 0
 scene = 0  # which scene is getting rendered |0 = the start| |1 = options| |2 = the game| |3 = game over screen|
@@ -28,7 +28,7 @@ options = []
 question = 1
 question_number = 10  # how many questions will the game provide
 temp_var_loop = True
-time_left = 35
+time_left = 30
 volume_music = 0.7
 volume_sound = 0.7
 
@@ -174,6 +174,7 @@ def main():
                     scene = 1
 
                 if on_text[0] and on_text[1] == 0:  # Play text
+                    difficulty = 0
                     score = 0
                     question = 1
                     time_left = 20
@@ -226,12 +227,10 @@ def main():
                 if on_button[1] > 0 and on_button[0]:  # THE 4 MAIN BUTTONS
                     question += 1
                     if options[on_button[1] - 1] == answer:  # IF CORRECT ANSWER
-                        time_left += 6
+                        time_left += 5
                         if symbol == '>':
-                            time_left -= 4.5
+                            time_left -= 4
                         pygame.mixer.Channel(1).play(pygame.mixer.Sound('Resources/Sounds/correct.mp3'))
-                        if time_left > 40:  # capping the maximum stored time to 40
-                            time_left = 40
                         score += 1
                     else:
                         time_left -= 6
@@ -253,6 +252,8 @@ def main():
                 scene = 3
                 time_left = 20
                 pygame.mixer.Channel(0).play(pygame.mixer.Sound('Resources/Sounds/chill_music.mp3'), -1)
+            if time_left > 40:  # capping the maximum stored time to 40
+                time_left = 39.9
 
         # Render
         screen.fill((0, 0, 0))
@@ -369,7 +370,7 @@ def main():
             symbol_text.draw_text(symbol, WIDTH / 2, HEIGHT * 5 / 16, 100, font, (255, 255, 255))
 
             timer_object.draw_rectangle(
-                WIDTH / 2, HEIGHT / 22, WIDTH * time_left / 30, HEIGHT / 23, (211, 97, 53), curve=0)
+                WIDTH / 2, HEIGHT / 22, WIDTH * time_left / 40, HEIGHT / 23, (211, 97, 53), curve=0)
 
             options_object[0][0].draw_rectangle(
                 WIDTH * 1 / 8, HEIGHT * 14 / 18, WIDTH / 4 - WIDTH * 1 / 80, HEIGHT * 13 / 32, (219, 252, 255), 1)
@@ -423,6 +424,8 @@ def main():
 
         if scene == 2:  # if playing update time
             time_left -= fpsClock.get_time() / 1000
+            time_left -= difficulty
+            difficulty += 0.0000021
 
 
 def oof():  # short function to end the game
@@ -448,14 +451,14 @@ def make_question(mode):  # A function to make options randomly
         num2 = random.randint(1, 20)
         answer = num1 * num2
         symbol = 'x'
-    elif 'DIVISION' in mode:
+    elif '[÷]' in mode:
         while True:
             num1 = random.randint(1, 100)
             num2 = random.randint(1, 9)
             answer = num1 / num2
             if len(list(str(answer).split('.'))[1]) <= 1 and answer != 1.0 and answer != num1:  # uhhhhhhhhhhhhhhhhhhhhh
+                symbol = '÷'
                 break
-            symbol = '÷'
     elif '>' in mode:
         num1 = random.randint(1, 20000)
         num2 = random.randint(1, 20000)
@@ -489,7 +492,7 @@ def make_question(mode):  # A function to make options randomly
             else:
                 options.append(round(answer + random.randint(-10, 10), 1))
         elif type(answer) == int:
-            options.append(round(answer + random.randint(-10, 10), 1))
+            options.append(answer + random.randint(-10, 10))
         elif type(answer) == bool:
             options = ()
         elif type(answer) == Fraction:
